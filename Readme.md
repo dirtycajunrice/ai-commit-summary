@@ -1,4 +1,4 @@
-# gpt-commit-summarizer
+# GPT Commit Summary
 
 See [announcement blogpost](https://medium.com/@knaan.harpaz/leverage-openais-language-model-for-automated-commit-summaries-8181cef30375?source=friends_link&sk=b71a6799548f52274d2d0888e9bfd97e).
 

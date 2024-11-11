@@ -1,30 +1,31 @@
-import { context } from "@actions/github";
+import {context} from "@actions/github";
 
-import { summarizeCommits } from "./commitSummary";
-import { getFilesSummaries } from "./filesSummary";
+import {summarizeCommits} from "./commit-summary";
+import {getFileSummaries} from "./file-summary";
+import * as process from "node:process";
 
-async function run(): Promise<void> {
+const run = async () => {
   // Get the pull request number and repository owner and name from the context object
-  const { number } = context.payload.pull_request as {
-    number: number;
-  };
-  const issueNumber = number;
-  const { repository } = context.payload;
-
+  const {repository, pull_request} = context.payload;
+  if (pull_request === undefined) {
+    throw new Error("Missing pull request in context payload!");
+  }
   if (repository === undefined) {
-    throw new Error("Repository undefined");
+    throw new Error("Repository undefined in context payload!");
   }
 
   // Create a dictionary with the modified files being keys, and the hash values of the latest commits in which the file was modified being the values
-  const modifiedFilesSummaries = await getFilesSummaries(
-    issueNumber,
-    repository
-  );
+  const summaries = await getFileSummaries(pull_request.number, repository);
 
-  await summarizeCommits(issueNumber, repository, modifiedFilesSummaries);
+  await summarizeCommits(pull_request.number, repository, summaries);
 }
 
-run().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+run()
+  .then(() => {
+    console.log("Done");
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error(error);
+    process.exit(1);
+  });

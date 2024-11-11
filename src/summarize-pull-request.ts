@@ -4,7 +4,7 @@ import {
   MODEL_NAME,
   openai,
   TEMPERATURE,
-} from "./openAi";
+} from "./openai";
 
 const OPEN_AI_PROMPT = `You are an expert programmer, and you are trying to summarize a pull request.
 You went over every commit that is part of the pull request and over every file that was changed in it.
@@ -25,7 +25,7 @@ function preprocessCommitMessage(commitMessage: string): string {
   return commitMessage;
 }
 
-export async function summarizePr(
+export async function summarizePullRequest(
   fileSummaries: Record<string, string>,
   commitSummaries: Array<[string, string]>
 ): Promise<string> {

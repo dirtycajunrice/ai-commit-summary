@@ -1,8 +1,8 @@
-import type { gitDiffMetadata } from "./DiffMetadata";
+import type { gitDiffMetadata } from "./diff-metadata";
 import { octokit } from "./octokit";
-import { MAX_OPEN_AI_QUERY_LENGTH, MAX_TOKENS, MODEL_NAME, openai, TEMPERATURE } from "./openAi";
-import { SHARED_PROMPT } from "./sharedPrompt";
-import { summarizePr } from "./summarizePr";
+import { MAX_OPEN_AI_QUERY_LENGTH, MAX_TOKENS, MODEL_NAME, openai, TEMPERATURE } from "./openai";
+import { SHARED_PROMPT } from "./shared-prompt";
+import { summarizePullRequest } from "./summarize-pull-request";
 
 const OPEN_AI_PRIMING = `${SHARED_PROMPT}
 After the git diff of the first file, there will be an empty line, and then the git diff of the next file. 
@@ -228,7 +228,7 @@ export async function summarizeCommits(
   if (needsToSummarizeHead && headCommitShaAndSummary !== undefined) {
     let prSummary = "Error summarizing PR";
     try {
-      prSummary = await summarizePr(modifiedFilesSummaries, commitSummaries);
+      prSummary = await summarizePullRequest(modifiedFilesSummaries, commitSummaries);
     } catch (error) {
       console.error(error);
     }
